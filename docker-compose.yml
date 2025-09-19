@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: .
+    ports:
+      - "3001:80"
+    environment:
+      - VITE_API_URL=http://localhost:3000/api
+    depends_on:
+      - backend
+    networks:
+      - truetweet-network
+
+  backend:
+    # Backend service would be defined here when created
+    # image: truetweet-backend:latest
+    # ports:
+    #   - "3000:3000"
+    # environment:
+    #   - NODE_ENV=production
+    #   - DATABASE_URL=./database.sqlite
+    #   - JWT_SECRET=your-secret-key
+    #   - REDIS_URL=redis://redis:6379
+    # depends_on:
+    #   - redis
+    # networks:
+    #   - truetweet-network
+    image: nginx:alpine  # Placeholder
+    ports:
+      - "3000:80"
+    networks:
+      - truetweet-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - truetweet-network
+
+networks:
+  truetweet-network:
+    driver: bridge
+
+volumes:
+  redis_data:
