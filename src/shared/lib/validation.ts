@@ -78,34 +78,6 @@ export function transformReactHookFormErrors(
 }
 
 /**
- * Transforms legacy API error format to new validation error format
- */
-export function transformLegacyApiError(
-  legacyErrors: Record<string, string[]>,
-  message = 'Validation failed'
-): ValidationError {
-  const issues: ValidationIssue[] = Object.entries(legacyErrors).flatMap(
-    ([field, messages]) =>
-      messages.map((msg) => ({
-        path: field,
-        message: msg,
-        code: 'validation_error',
-      }))
-  )
-
-  return {
-    success: false,
-    error: {
-      code: 'VALIDATION_ERROR',
-      message,
-      details: {
-        issues,
-      },
-    },
-  }
-}
-
-/**
  * Extracts validation issues for a specific field
  */
 export function getFieldValidationIssues(

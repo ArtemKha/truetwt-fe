@@ -1,6 +1,12 @@
 import { apiClient } from '@/shared/api/client'
-import { ApiResponse, PaginatedResponse } from '@/shared/api/types'
-import { User, CreateUserRequest, LoginRequest, AuthResponse } from '../model/types'
+import type { ApiResponse, PaginatedResponse } from '@/shared/api/types'
+import type {
+  User,
+  CreateUserRequest,
+  LoginRequest,
+  AuthResponse,
+  AuthTokens,
+} from '../model/types'
 
 export const userApi = {
   register: (data: CreateUserRequest): Promise<ApiResponse<AuthResponse>> =>
@@ -12,11 +18,12 @@ export const userApi = {
   logout: (): Promise<void> =>
     apiClient.post('/auth/logout').then((res) => res.data),
 
-  refreshToken: (): Promise<ApiResponse<{ token: string }>> =>
+  refreshToken: (): Promise<ApiResponse<AuthTokens>> =>
     apiClient.post('/auth/refresh').then((res) => res.data),
 
-  getUsers: (params?: { offset?: number; limit?: number }): Promise<PaginatedResponse<User>> =>
-    apiClient.get('/users', { params }).then((res) => res.data),
+  getUsers: (params?: { offset?: number; limit?: number }): Promise<
+    PaginatedResponse<User>
+  > => apiClient.get('/users', { params }).then((res) => res.data),
 
   getUserById: (id: string): Promise<ApiResponse<User>> =>
     apiClient.get(`/users/${id}`).then((res) => res.data),

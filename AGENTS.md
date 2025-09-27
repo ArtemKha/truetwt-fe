@@ -1,3 +1,5 @@
+<!-- TODO: create complete code style, rules and guidelines for the AI agent to follow -->
+
 # Validation Error Handling System
 
 This document describes the standardized validation error handling system implemented in the TrueTweet application.

@@ -1,12 +1,14 @@
 export interface User {
-  id: string
+  id: number
   username: string
-  created_at: string
-  updated_at: string
+  email: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface CreateUserRequest {
   username: string
+  email: string
   password: string
 }
 
@@ -15,7 +17,12 @@ export interface LoginRequest {
   password: string
 }
 
+export interface AuthTokens {
+  accessToken: string
+  refreshToken: string
+}
+
 export interface AuthResponse {
   user: User
-  token: string
+  tokens: AuthTokens
 }

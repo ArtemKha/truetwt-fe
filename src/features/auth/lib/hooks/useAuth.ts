@@ -13,14 +13,21 @@ export function useAuth() {
   const { data: authData, isLoading } = useQuery({
     queryKey: ['auth'],
     queryFn: () => {
-      const token = localStorage.getItem('auth-token')
+      const accessToken = localStorage.getItem('auth-access-token')
+      const refreshToken = localStorage.getItem('auth-refresh-token')
       const user = localStorage.getItem('auth-user')
-      if (token && user) {
+
+      if (accessToken && refreshToken && user) {
         try {
-          return { token, user: JSON.parse(user) }
+          return {
+            accessToken,
+            refreshToken,
+            user: JSON.parse(user),
+          }
         } catch {
           // Clear invalid data
-          localStorage.removeItem('auth-token')
+          localStorage.removeItem('auth-access-token')
+          localStorage.removeItem('auth-refresh-token')
           localStorage.removeItem('auth-user')
           return null
         }
@@ -33,14 +40,19 @@ export function useAuth() {
 
   const loginMutation = useMutation({
     mutationFn: userApi.login,
-    onSuccess: (data) => {
-      localStorage.setItem('auth-token', data.data.token)
-      localStorage.setItem('auth-user', JSON.stringify(data.data.user))
-      queryClient.setQueryData(['auth'], {
-        token: data.data.token,
-        user: data.data.user,
-      })
-      toast.success('Successfully logged in!')
+    onSuccess: (response) => {
+      if (response.data) {
+        const { tokens, user } = response.data
+        localStorage.setItem('auth-access-token', tokens.accessToken)
+        localStorage.setItem('auth-refresh-token', tokens.refreshToken)
+        localStorage.setItem('auth-user', JSON.stringify(user))
+        queryClient.setQueryData(['auth'], {
+          accessToken: tokens.accessToken,
+          refreshToken: tokens.refreshToken,
+          user,
+        })
+        toast.success('Successfully logged in!')
+      }
     },
     onError: (error: unknown) => {
       const message = getErrorMessage(error)
@@ -50,14 +62,19 @@ export function useAuth() {
 
   const registerMutation = useMutation({
     mutationFn: userApi.register,
-    onSuccess: (data) => {
-      localStorage.setItem('auth-token', data.data.token)
-      localStorage.setItem('auth-user', JSON.stringify(data.data.user))
-      queryClient.setQueryData(['auth'], {
-        token: data.data.token,
-        user: data.data.user,
-      })
-      toast.success('Account created successfully!')
+    onSuccess: (response) => {
+      if (response.data) {
+        const { tokens, user } = response.data
+        localStorage.setItem('auth-access-token', tokens.accessToken)
+        localStorage.setItem('auth-refresh-token', tokens.refreshToken)
+        localStorage.setItem('auth-user', JSON.stringify(user))
+        queryClient.setQueryData(['auth'], {
+          accessToken: tokens.accessToken,
+          refreshToken: tokens.refreshToken,
+          user,
+        })
+        toast.success('Account created successfully!')
+      }
     },
     onError: (error: unknown) => {
       const message = getErrorMessage(error)
@@ -68,7 +85,8 @@ export function useAuth() {
   const logoutMutation = useMutation({
     mutationFn: userApi.logout,
     onSuccess: () => {
-      localStorage.removeItem('auth-token')
+      localStorage.removeItem('auth-access-token')
+      localStorage.removeItem('auth-refresh-token')
       localStorage.removeItem('auth-user')
       queryClient.setQueryData(['auth'], null)
       queryClient.clear()
@@ -82,8 +100,9 @@ export function useAuth() {
 
   return {
     user: authData?.user,
-    token: authData?.token,
-    isAuthenticated: !!authData?.token,
+    accessToken: authData?.accessToken,
+    refreshToken: authData?.refreshToken,
+    isAuthenticated: !!authData?.accessToken,
     isLoading,
     login,
     register,

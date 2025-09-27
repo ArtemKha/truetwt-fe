@@ -1,7 +1,13 @@
 import axios from 'axios'
 import type { AxiosError } from 'axios'
 import type { ApiError, ValidationError } from './types'
-import { transformLegacyApiError } from '@/shared/lib/validation'
+
+// Extend the AxiosRequestConfig to include _retry flag
+declare module 'axios' {
+  interface InternalAxiosRequestConfig {
+    _retry?: boolean
+  }
+}
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 
@@ -15,9 +21,9 @@ export const apiClient = axios.create({
 // Request interceptor to add auth token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('auth-token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+    const accessToken = localStorage.getItem('auth-access-token')
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`
     }
     return config
   },
@@ -26,16 +32,107 @@ apiClient.interceptors.request.use(
   }
 )
 
+// Flag to prevent multiple refresh attempts
+let isRefreshing = false
+let failedQueue: Array<{
+  resolve: (value: string | null) => void
+  reject: (error: unknown) => void
+}> = []
+
+const processQueue = (error: unknown, token: string | null = null) => {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error)
+    } else {
+      resolve(token)
+    }
+  })
+
+  failedQueue = []
+}
+
 // Response interceptor for error handling
 apiClient.interceptors.response.use(
   (response) => response,
-  (error: AxiosError<ApiError>) => {
+  async (error: AxiosError<ApiError>) => {
+    const originalRequest = error.config
+
     // Handle authentication errors
-    if (error.response?.status === 401) {
-      localStorage.removeItem('auth-token')
-      localStorage.removeItem('auth-user')
-      // Use window.location.replace to prevent back button issues
-      window.location.replace('/login')
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest._retry
+    ) {
+      if (isRefreshing) {
+        // If already refreshing, queue this request
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject })
+        })
+          .then((token) => {
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${token}`
+            }
+            return apiClient(originalRequest)
+          })
+          .catch((err) => {
+            return Promise.reject(err)
+          })
+      }
+
+      originalRequest._retry = true
+      isRefreshing = true
+
+      const refreshToken = localStorage.getItem('auth-refresh-token')
+
+      if (refreshToken) {
+        try {
+          // Create a new axios instance to avoid interceptor loops
+          const refreshResponse = await axios.post(
+            `${API_BASE_URL}/auth/refresh`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${refreshToken}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          )
+
+          const { accessToken, refreshToken: newRefreshToken } =
+            refreshResponse.data.data
+
+          // Update stored tokens
+          localStorage.setItem('auth-access-token', accessToken)
+          localStorage.setItem('auth-refresh-token', newRefreshToken)
+
+          // Update the original request with new token
+          if (originalRequest.headers) {
+            originalRequest.headers.Authorization = `Bearer ${accessToken}`
+          }
+
+          processQueue(null, accessToken)
+
+          return apiClient(originalRequest)
+        } catch (refreshError) {
+          processQueue(refreshError, null)
+
+          // Clear all auth data and redirect to login
+          localStorage.removeItem('auth-access-token')
+          localStorage.removeItem('auth-refresh-token')
+          localStorage.removeItem('auth-user')
+          window.location.replace('/login')
+
+          return Promise.reject(refreshError)
+        } finally {
+          isRefreshing = false
+        }
+      } else {
+        // No refresh token, clear auth data and redirect
+        localStorage.removeItem('auth-access-token')
+        localStorage.removeItem('auth-refresh-token')
+        localStorage.removeItem('auth-user')
+        window.location.replace('/login')
+      }
     }
 
     // Transform error response to standardized format
@@ -48,20 +145,6 @@ apiClient.interceptors.response.use(
         errorData.error?.details
       ) {
         return Promise.reject(error)
-      }
-
-      // Transform legacy validation errors to new format
-      if (
-        errorData.error?.errors &&
-        typeof errorData.error.errors === 'object'
-      ) {
-        const transformedError: ValidationError = transformLegacyApiError(
-          errorData.error.errors,
-          errorData.error.message || 'Validation failed'
-        )
-
-        // Replace the response data with transformed error
-        error.response.data = transformedError as ApiError
       }
     }
 
