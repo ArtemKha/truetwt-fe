@@ -25,23 +25,21 @@ export function PostDetail({ postId }: PostDetailProps) {
 
   if (error || !data?.data) {
     return (
-      <div className="p-8 text-center text-destructive">
-        Post not found
-      </div>
+      <div className="p-8 text-center text-destructive">Post not found</div>
     )
   }
 
-  const post = data.data
+  const post = data.data.post
 
   return (
     <div>
       <PostCard post={post} />
-      
+
       <div className="border-t border-border p-4">
         <h3 className="font-semibold mb-4">Add a comment</h3>
         <CreateCommentForm postId={postId} />
       </div>
-      
+
       <CommentsList postId={postId} />
     </div>
   )

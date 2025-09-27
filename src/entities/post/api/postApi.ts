@@ -6,6 +6,7 @@ import type {
 } from '@/shared/api/types'
 import type {
   Post,
+  TimelinePost,
   CreatePostRequest,
   Comment,
   CreateCommentRequest,
@@ -13,13 +14,13 @@ import type {
 
 export const postApi = {
   getTimeline: (params?: { page?: number; limit?: number }): Promise<
-    TimelineResponse<Post>
+    TimelineResponse<TimelinePost>
   > => apiClient.get('/timeline', { params }).then((res) => res.data),
 
-  createPost: (data: CreatePostRequest): Promise<ApiResponse<Post>> =>
+  createPost: (data: CreatePostRequest): Promise<ApiResponse<{ post: Post }>> =>
     apiClient.post('/posts', data).then((res) => res.data),
 
-  getPost: (id: string): Promise<ApiResponse<Post>> =>
+  getPost: (id: string): Promise<ApiResponse<{ post: Post }>> =>
     apiClient.get(`/posts/${id}`).then((res) => res.data),
 
   deletePost: (id: string): Promise<void> =>
@@ -28,7 +29,7 @@ export const postApi = {
   getUserPosts: (
     userId: string,
     params?: { page?: number; limit?: number }
-  ): Promise<TimelineResponse<Post>> =>
+  ): Promise<TimelineResponse<TimelinePost>> =>
     apiClient.get(`/posts/user/${userId}`, { params }).then((res) => res.data),
 
   getPostComments: (postId: string): Promise<PaginatedResponse<Comment>> =>

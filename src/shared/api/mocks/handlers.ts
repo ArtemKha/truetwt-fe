@@ -1,8 +1,8 @@
 import { http, HttpResponse } from 'msw'
-import type { Post } from '@/entities/post/model/types'
+import type { Post, TimelinePost } from '@/entities/post/model/types'
 
-// Mock data for posts matching the new backend format
-const mockPosts: Post[] = [
+// Mock data for timeline posts
+const mockTimelinePosts: TimelinePost[] = [
   {
     id: 9,
     userId: 1,
@@ -131,8 +131,8 @@ export const handlers = [
     // Simulate pagination
     const startIndex = (page - 1) * limit
     const endIndex = startIndex + limit
-    const paginatedPosts = mockPosts.slice(startIndex, endIndex)
-    const total = mockPosts.length
+    const paginatedPosts = mockTimelinePosts.slice(startIndex, endIndex)
+    const total = mockTimelinePosts.length
     const hasNext = endIndex < total
     const hasPrev = page > 1
 
@@ -156,21 +156,34 @@ export const handlers = [
     const body = (await request.json()) as { content: string }
 
     const newPost: Post = {
-      id: mockPosts.length + 1,
+      id: mockTimelinePosts.length + 1,
       userId: 1, // Current user
-      username: 'alice_dev',
       content: body.content,
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      isDeleted: false,
+      user: {
+        id: 1,
+        username: 'alice_dev',
+      },
       mentions: [], // TODO: Extract mentions from content
     }
 
-    // Add to the beginning of the array (newest first)
-    mockPosts.unshift(newPost)
+    // Add to timeline as well
+    const timelinePost: TimelinePost = {
+      id: newPost.id,
+      userId: newPost.userId,
+      username: newPost.user.username,
+      content: newPost.content,
+      createdAt: newPost.createdAt,
+      mentions: [],
+    }
+    mockTimelinePosts.unshift(timelinePost)
 
     return HttpResponse.json(
       {
         success: true,
-        data: newPost,
+        data: { post: newPost },
       },
       { status: 201 }
     )
@@ -179,11 +192,11 @@ export const handlers = [
   // GET /api/posts/:id - Get specific post
   http.get(`${API_BASE_URL}/posts/:id`, ({ params }) => {
     const { id } = params
-    const post = mockPosts.find(
+    const timelinePost = mockTimelinePosts.find(
       (p) => p.id === Number.parseInt(id as string, 10)
     )
 
-    if (!post) {
+    if (!timelinePost) {
       return HttpResponse.json(
         {
           success: false,
@@ -196,16 +209,34 @@ export const handlers = [
       )
     }
 
+    // Convert timeline post to full post format
+    const post: Post = {
+      id: timelinePost.id,
+      userId: timelinePost.userId,
+      content: timelinePost.content,
+      createdAt: timelinePost.createdAt,
+      updatedAt: timelinePost.createdAt,
+      isDeleted: false,
+      user: {
+        id: timelinePost.userId,
+        username: timelinePost.username,
+      },
+      mentions: timelinePost.mentions.map((m) => ({
+        id: m.id,
+        username: m.username,
+      })),
+    }
+
     return HttpResponse.json({
       success: true,
-      data: post,
+      data: { post },
     })
   }),
 
   // DELETE /api/posts/:id - Delete post
   http.delete(`${API_BASE_URL}/posts/:id`, ({ params }) => {
     const { id } = params
-    const postIndex = mockPosts.findIndex(
+    const postIndex = mockTimelinePosts.findIndex(
       (p) => p.id === Number.parseInt(id as string, 10)
     )
 
@@ -222,7 +253,7 @@ export const handlers = [
       )
     }
 
-    mockPosts.splice(postIndex, 1)
+    mockTimelinePosts.splice(postIndex, 1)
 
     return HttpResponse.json({
       success: true,
@@ -236,7 +267,7 @@ export const handlers = [
     const page = Number.parseInt(url.searchParams.get('page') || '1', 10)
     const limit = Number.parseInt(url.searchParams.get('limit') || '10', 10)
 
-    const userPosts = mockPosts.filter(
+    const userPosts = mockTimelinePosts.filter(
       (p) => p.userId === Number.parseInt(userId as string, 10)
     )
 

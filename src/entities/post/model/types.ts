@@ -3,13 +3,32 @@ export interface Mention {
   username: string
 }
 
+export interface UserSummary {
+  id: number
+  username: string
+}
+
 export interface Post {
+  id: number
+  userId: number
+  content: string
+  createdAt: string
+  updatedAt: string
+  isDeleted: boolean
+  user: {
+    id: number
+    username: string
+  }
+  mentions: Mention[]
+}
+
+export interface TimelinePost {
   id: number
   userId: number
   username: string
   content: string
   createdAt: string
-  mentions: Mention[]
+  mentions: UserSummary[]
 }
 
 export interface CreatePostRequest {

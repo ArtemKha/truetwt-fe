@@ -1,2 +1,9 @@
 export { postApi } from './api/postApi'
-export type { Post, CreatePostRequest, Comment, CreateCommentRequest } from './model/types'
+export type {
+  Post,
+  TimelinePost,
+  CreatePostRequest,
+  Comment,
+  CreateCommentRequest,
+  UserSummary,
+} from './model/types'

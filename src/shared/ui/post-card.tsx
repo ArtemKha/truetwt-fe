@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
-import type { Post } from '@/entities/post'
+import type { Post, TimelinePost } from '@/entities/post'
 import { useAuth } from '@/features/auth'
 import { DeletePostButton } from '@/features/posts/delete-post'
 import { Card, CardContent } from './card'
@@ -9,22 +9,26 @@ import { Button } from './button'
 import { MessageCircle } from 'lucide-react'
 
 interface PostCardProps {
-  post: Post
+  post: Post | TimelinePost
 }
 
 export function PostCard({ post }: PostCardProps) {
   const { user } = useAuth()
   const isOwner = user?.id === post.userId
 
+  // Handle both Post and TimelinePost formats
+  const username = 'user' in post ? post.user.username : post.username
+  const mentions = post.mentions
+
   const renderContent = (
     content: string,
     mentions: typeof post.mentions
-  ): (string | JSX.Element)[] => {
+  ): (string | React.ReactElement)[] => {
     // Split content by mentions and render safely
-    let parts: (string | JSX.Element)[] = [content]
+    let parts: (string | React.ReactElement)[] = [content]
 
     mentions.forEach((mention) => {
-      const newParts: (string | JSX.Element)[] = []
+      const newParts: (string | React.ReactElement)[] = []
       parts.forEach((part, index) => {
         if (typeof part === 'string') {
           const mentionText = `@${mention.username}`
@@ -60,7 +64,7 @@ export function PostCard({ post }: PostCardProps) {
         <div className="flex space-x-3">
           <Avatar className="h-10 w-10">
             <AvatarFallback>
-              {post.username.slice(0, 2).toUpperCase()}
+              {username.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
 
@@ -70,7 +74,7 @@ export function PostCard({ post }: PostCardProps) {
                 to={`/profile/${post.userId}`}
                 className="font-semibold hover:underline"
               >
-                @{post.username}
+                @{username}
               </Link>
               <span className="text-muted-foreground text-sm">
                 {formatDistanceToNow(new Date(post.createdAt), {
