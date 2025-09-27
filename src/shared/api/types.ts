@@ -1,7 +1,3 @@
-export interface ApiResponse<T> {
-  data: T
-}
-
 export interface PaginatedResponse<T> {
   data: {
     items: T[]
@@ -13,10 +9,41 @@ export interface PaginatedResponse<T> {
   }
 }
 
-export interface ApiError {
+export interface ValidationIssue {
+  path: string
+  message: string
+  code: string
+}
+
+export interface ValidationErrorDetails {
+  issues: ValidationIssue[]
+}
+
+export interface ValidationError {
+  success: false
   error: {
+    code: 'VALIDATION_ERROR'
+    message: string
+    details: ValidationErrorDetails
+  }
+}
+
+export interface ApiError {
+  success: boolean
+  error?: {
     code: string
     message: string
-    errors?: Record<string, string[]>
+    details?: ValidationErrorDetails
+    errors?: Record<string, string[]> // Legacy format support
+  }
+}
+
+export interface ApiResponse<T = unknown> {
+  success: boolean
+  data?: T
+  error?: {
+    code: string
+    message: string
+    details?: ValidationErrorDetails
   }
 }

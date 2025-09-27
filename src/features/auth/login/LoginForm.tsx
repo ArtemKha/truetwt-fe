@@ -1,23 +1,21 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/hooks/useAuth'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
-
-const loginSchema = z.object({
-  username: z.string().min(1, 'Username is required'),
-  password: z.string().min(1, 'Password is required'),
-})
-
-type LoginFormData = z.infer<typeof loginSchema>
+import { ValidationError } from '@/shared/ui/validation-error'
+import { loginSchema, type LoginFormData } from '@/shared/lib/schemas'
+import { useValidationError } from '@/shared/lib/hooks/useValidationError'
+import { getValidationError } from '@/shared/api/client'
 
 export function LoginForm() {
   const navigate = useNavigate()
   const { login, isLoginLoading, isAuthenticated } = useAuth()
-  
+  const { setValidationError, clearValidationError, getFieldIssues } =
+    useValidationError()
+
   const {
     register,
     handleSubmit,
@@ -30,8 +28,17 @@ export function LoginForm() {
     navigate('/')
   }
 
-  const onSubmit = (data: LoginFormData) => {
-    login(data)
+  const onSubmit = async (data: LoginFormData) => {
+    clearValidationError()
+
+    try {
+      await login(data)
+    } catch (error) {
+      const validationErr = getValidationError(error)
+      if (validationErr) {
+        setValidationError(validationErr)
+      }
+    }
   }
 
   return (
@@ -46,6 +53,7 @@ export function LoginForm() {
         {errors.username && (
           <p className="text-sm text-destructive">{errors.username.message}</p>
         )}
+        <ValidationError issues={getFieldIssues('username')} />
       </div>
 
       <div className="space-y-2">
@@ -59,6 +67,7 @@ export function LoginForm() {
         {errors.password && (
           <p className="text-sm text-destructive">{errors.password.message}</p>
         )}
+        <ValidationError issues={getFieldIssues('password')} />
       </div>
 
       <Button type="submit" className="w-full" disabled={isLoginLoading}>

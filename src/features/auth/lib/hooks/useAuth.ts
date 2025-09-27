@@ -5,17 +5,7 @@ import {
   type CreateUserRequest,
 } from '@/entities/user'
 import { toast } from 'sonner'
-
-interface ApiError {
-  response?: {
-    data?: {
-      error?: {
-        message?: string
-      }
-    }
-  }
-  message?: string
-}
+import { getErrorMessage } from '@/shared/api/client'
 
 export function useAuth() {
   const queryClient = useQueryClient()
@@ -53,11 +43,7 @@ export function useAuth() {
       toast.success('Successfully logged in!')
     },
     onError: (error: unknown) => {
-      const apiError = error as ApiError
-      const message =
-        apiError?.response?.data?.error?.message ||
-        apiError?.message ||
-        'Login failed'
+      const message = getErrorMessage(error)
       toast.error(message)
     },
   })
@@ -74,11 +60,7 @@ export function useAuth() {
       toast.success('Account created successfully!')
     },
     onError: (error: unknown) => {
-      const apiError = error as ApiError
-      const message =
-        apiError?.response?.data?.error?.message ||
-        apiError?.message ||
-        'Registration failed'
+      const message = getErrorMessage(error)
       toast.error(message)
     },
   })

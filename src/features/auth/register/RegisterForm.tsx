@@ -1,27 +1,29 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/hooks/useAuth'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
-
-const registerSchema = z.object({
-  username: z.string().min(3, 'Username must be at least 3 characters'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ['confirmPassword'],
-})
-
-type RegisterFormData = z.infer<typeof registerSchema>
+import { ValidationError } from '@/shared/ui/validation-error'
+import { registerSchema, type RegisterFormData } from '@/shared/lib/schemas'
+import { useValidationError } from '@/shared/lib/hooks/useValidationError'
+import { getValidationError } from '@/shared/api/client'
 
 export function RegisterForm() {
   const navigate = useNavigate()
-  const { register: registerUser, isRegisterLoading, isAuthenticated } = useAuth()
-  
+  const {
+    register: registerUser,
+    isRegisterLoading,
+    isAuthenticated,
+  } = useAuth()
+  const {
+    validationError,
+    setValidationError,
+    clearValidationError,
+    getFieldIssues,
+  } = useValidationError()
+
   const {
     register,
     handleSubmit,
@@ -34,11 +36,21 @@ export function RegisterForm() {
     navigate('/')
   }
 
-  const onSubmit = (data: RegisterFormData) => {
-    registerUser({
-      username: data.username,
-      password: data.password,
-    })
+  const onSubmit = async (data: RegisterFormData) => {
+    clearValidationError()
+
+    try {
+      await registerUser({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      })
+    } catch (error) {
+      const validationErr = getValidationError(error)
+      if (validationErr) {
+        setValidationError(validationErr)
+      }
+    }
   }
 
   return (
@@ -53,6 +65,21 @@ export function RegisterForm() {
         {errors.username && (
           <p className="text-sm text-destructive">{errors.username.message}</p>
         )}
+        <ValidationError issues={getFieldIssues('username')} />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          {...register('email')}
+          placeholder="Enter your email"
+        />
+        {errors.email && (
+          <p className="text-sm text-destructive">{errors.email.message}</p>
+        )}
+        <ValidationError issues={getFieldIssues('email')} />
       </div>
 
       <div className="space-y-2">
@@ -66,6 +93,7 @@ export function RegisterForm() {
         {errors.password && (
           <p className="text-sm text-destructive">{errors.password.message}</p>
         )}
+        <ValidationError issues={getFieldIssues('password')} />
       </div>
 
       <div className="space-y-2">
@@ -77,8 +105,11 @@ export function RegisterForm() {
           placeholder="Confirm your password"
         />
         {errors.confirmPassword && (
-          <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
+          <p className="text-sm text-destructive">
+            {errors.confirmPassword.message}
+          </p>
         )}
+        <ValidationError issues={getFieldIssues('confirmPassword')} />
       </div>
 
       <Button type="submit" className="w-full" disabled={isRegisterLoading}>
