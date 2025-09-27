@@ -17,12 +17,8 @@ export function RegisterForm() {
     isRegisterLoading,
     isAuthenticated,
   } = useAuth()
-  const {
-    validationError,
-    setValidationError,
-    clearValidationError,
-    getFieldIssues,
-  } = useValidationError()
+  const { setValidationError, clearValidationError, getFieldIssues } =
+    useValidationError()
 
   const {
     register,

@@ -19,7 +19,10 @@ export function UsersList() {
     queryFn: ({ pageParam = 0 }) =>
       userApi.getUsers({ offset: pageParam, limit: 20 }),
     getNextPageParam: (lastPage, pages) => {
-      const totalItems = pages.reduce((acc, page) => acc + page.data.items.length, 0)
+      const totalItems = pages.reduce(
+        (acc, page) => acc + page.data.items.length,
+        0
+      )
       if (totalItems < lastPage.data.pagination.total) {
         return totalItems
       }
@@ -63,14 +66,14 @@ export function UsersList() {
               <div>
                 <h3 className="font-semibold">@{user.username}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Joined {new Date(user.created_at).toLocaleDateString()}
+                  Joined {new Date(user.createdAt).toLocaleDateString()}
                 </p>
               </div>
             </Link>
           </CardContent>
         </Card>
       ))}
-      
+
       {hasNextPage && (
         <div className="text-center">
           <Button

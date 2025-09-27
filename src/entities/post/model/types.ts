@@ -1,14 +1,15 @@
+export interface Mention {
+  id: number
+  username: string
+}
+
 export interface Post {
-  id: string
-  user_id: string
+  id: number
+  userId: number
+  username: string
   content: string
-  created_at: string
-  updated_at: string
-  is_deleted: boolean
-  user: {
-    id: string
-    username: string
-  }
+  createdAt: string
+  mentions: Mention[]
 }
 
 export interface CreatePostRequest {
@@ -16,17 +17,12 @@ export interface CreatePostRequest {
 }
 
 export interface Comment {
-  id: string
-  post_id: string
-  user_id: string
+  id: number
+  postId: number
+  userId: number
+  username: string
   content: string
-  created_at: string
-  updated_at: string
-  is_deleted: boolean
-  user: {
-    id: string
-    username: string
-  }
+  createdAt: string
 }
 
 export interface CreateCommentRequest {

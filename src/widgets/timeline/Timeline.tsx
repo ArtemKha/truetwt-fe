@@ -14,19 +14,14 @@ export function Timeline() {
     error,
   } = useInfiniteQuery({
     queryKey: ['timeline'],
-    queryFn: ({ pageParam = 0 }) =>
-      postApi.getTimeline({ offset: pageParam, limit: 10 }),
-    getNextPageParam: (lastPage, pages) => {
-      const totalItems = pages.reduce(
-        (acc, page) => acc + page.data.items.length,
-        0
-      )
-      if (totalItems < lastPage.data.pagination.total) {
-        return totalItems
-      }
-      return undefined
+    queryFn: ({ pageParam = 1 }) =>
+      postApi.getTimeline({ page: pageParam, limit: 10 }),
+    getNextPageParam: (lastPage) => {
+      return lastPage.data.pagination.hasNext
+        ? lastPage.data.pagination.page + 1
+        : undefined
     },
-    initialPageParam: 0,
+    initialPageParam: 1,
   })
 
   if (isLoading) {
@@ -47,7 +42,7 @@ export function Timeline() {
     )
   }
 
-  const posts = data?.pages.flatMap((page) => page.data.items) ?? []
+  const posts = data?.pages.flatMap((page) => page.data.posts) ?? []
 
   if (posts.length === 0) {
     return (

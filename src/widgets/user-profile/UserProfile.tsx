@@ -42,7 +42,7 @@ export function UserProfile({ userId }: UserProfileProps) {
           <div>
             <CardTitle className="text-2xl">@{user.username}</CardTitle>
             <p className="text-muted-foreground">
-              Joined {new Date(user.created_at).toLocaleDateString()}
+              Joined {new Date(user.createdAt).toLocaleDateString()}
             </p>
           </div>
         </div>

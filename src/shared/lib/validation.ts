@@ -1,10 +1,6 @@
 import type { ZodError, ZodIssue } from 'zod'
 import type { FieldErrors } from 'react-hook-form'
-import type {
-  ValidationIssue,
-  ValidationError,
-  ValidationErrorDetails,
-} from '@/shared/api/types'
+import type { ValidationIssue, ValidationError } from '@/shared/api/types'
 
 /**
  * Maps Zod error codes to our validation error codes (1:1 mapping)
@@ -60,8 +56,9 @@ export function transformReactHookFormErrors(
   const issues: ValidationIssue[] = Object.entries(errors).map(
     ([field, error]) => ({
       path: field,
-      message: error?.message || 'Invalid value',
-      code: error?.type || 'invalid_type',
+      message:
+        typeof error?.message === 'string' ? error.message : 'Invalid value',
+      code: typeof error?.type === 'string' ? error.type : 'invalid_type',
     })
   )
 

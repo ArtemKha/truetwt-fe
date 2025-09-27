@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,12 +15,8 @@ const MAX_CHARACTERS = 280
 
 export function CreatePostForm() {
   const queryClient = useQueryClient()
-  const {
-    validationError,
-    setValidationError,
-    clearValidationError,
-    getFieldIssues,
-  } = useValidationError()
+  const { setValidationError, clearValidationError, getFieldIssues } =
+    useValidationError()
 
   const {
     register,

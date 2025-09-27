@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
-import { type Post } from '@/entities/post'
+import type { Post } from '@/entities/post'
 import { useAuth } from '@/features/auth'
 import { DeletePostButton } from '@/features/posts/delete-post'
 import { Card, CardContent } from './card'
@@ -14,14 +14,44 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   const { user } = useAuth()
-  const isOwner = user?.id === post.user_id
+  const isOwner = user?.id === post.userId
 
-  const formatContent = (content: string) => {
-    // Simple mention detection and linking
-    return content.replace(
-      /@(\w+)/g,
-      '<span class="text-primary font-medium">@$1</span>'
-    )
+  const renderContent = (
+    content: string,
+    mentions: typeof post.mentions
+  ): (string | JSX.Element)[] => {
+    // Split content by mentions and render safely
+    let parts: (string | JSX.Element)[] = [content]
+
+    mentions.forEach((mention) => {
+      const newParts: (string | JSX.Element)[] = []
+      parts.forEach((part, index) => {
+        if (typeof part === 'string') {
+          const mentionText = `@${mention.username}`
+          const splitParts = part.split(mentionText)
+          splitParts.forEach((splitPart, splitIndex) => {
+            if (splitIndex > 0) {
+              newParts.push(
+                <span
+                  key={`${mention.id}-${index}-${splitIndex}`}
+                  className="text-primary font-medium"
+                >
+                  {mentionText}
+                </span>
+              )
+            }
+            if (splitPart) {
+              newParts.push(splitPart)
+            }
+          })
+        } else {
+          newParts.push(part)
+        }
+      })
+      parts = newParts
+    })
+
+    return parts
   }
 
   return (
@@ -30,37 +60,38 @@ export function PostCard({ post }: PostCardProps) {
         <div className="flex space-x-3">
           <Avatar className="h-10 w-10">
             <AvatarFallback>
-              {post.user.username.slice(0, 2).toUpperCase()}
+              {post.username.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2">
               <Link
-                to={`/profile/${post.user_id}`}
+                to={`/profile/${post.userId}`}
                 className="font-semibold hover:underline"
               >
-                @{post.user.username}
+                @{post.username}
               </Link>
               <span className="text-muted-foreground text-sm">
-                {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+                {formatDistanceToNow(new Date(post.createdAt), {
+                  addSuffix: true,
+                })}
               </span>
               {isOwner && (
                 <div className="ml-auto">
-                  <DeletePostButton postId={post.id} />
+                  <DeletePostButton postId={post.id.toString()} />
                 </div>
               )}
             </div>
-            
+
             <div className="mt-2">
               <Link to={`/post/${post.id}`}>
-                <p
-                  className="text-foreground whitespace-pre-wrap hover:cursor-pointer"
-                  dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
-                />
+                <p className="text-foreground whitespace-pre-wrap hover:cursor-pointer">
+                  {renderContent(post.content, post.mentions)}
+                </p>
               </Link>
             </div>
-            
+
             <div className="mt-3 flex items-center space-x-4">
               <Button variant="ghost" size="sm" asChild>
                 <Link to={`/post/${post.id}`}>

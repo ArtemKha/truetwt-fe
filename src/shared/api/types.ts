@@ -9,6 +9,20 @@ export interface PaginatedResponse<T> {
   }
 }
 
+export interface TimelineResponse<T> {
+  success: boolean
+  data: {
+    posts: T[]
+    pagination: {
+      total: number
+      page: number
+      limit: number
+      hasNext: boolean
+      hasPrev: boolean
+    }
+  }
+}
+
 export interface ValidationIssue {
   path: string
   message: string

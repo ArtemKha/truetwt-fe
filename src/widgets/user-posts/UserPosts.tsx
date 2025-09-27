@@ -18,16 +18,14 @@ export function UserPosts({ userId }: UserPostsProps) {
     error,
   } = useInfiniteQuery({
     queryKey: ['posts', 'user', userId],
-    queryFn: ({ pageParam = 0 }) =>
-      postApi.getUserPosts(userId, { offset: pageParam, limit: 10 }),
-    getNextPageParam: (lastPage, pages) => {
-      const totalItems = pages.reduce((acc, page) => acc + page.data.items.length, 0)
-      if (totalItems < lastPage.data.pagination.total) {
-        return totalItems
-      }
-      return undefined
+    queryFn: ({ pageParam = 1 }) =>
+      postApi.getUserPosts(userId, { page: pageParam, limit: 10 }),
+    getNextPageParam: (lastPage) => {
+      return lastPage.data.pagination.hasNext
+        ? lastPage.data.pagination.page + 1
+        : undefined
     },
-    initialPageParam: 0,
+    initialPageParam: 1,
   })
 
   if (isLoading) {
@@ -46,13 +44,11 @@ export function UserPosts({ userId }: UserPostsProps) {
     )
   }
 
-  const posts = data?.pages.flatMap((page) => page.data.items) ?? []
+  const posts = data?.pages.flatMap((page) => page.data.posts) ?? []
 
   if (posts.length === 0) {
     return (
-      <div className="p-8 text-center text-muted-foreground">
-        No posts yet
-      </div>
+      <div className="p-8 text-center text-muted-foreground">No posts yet</div>
     )
   }
 
@@ -61,11 +57,11 @@ export function UserPosts({ userId }: UserPostsProps) {
       <div className="border-b border-border p-4">
         <h2 className="text-lg font-semibold">Posts</h2>
       </div>
-      
+
       {posts.map((post) => (
         <PostCard key={post.id} post={post} />
       ))}
-      
+
       {hasNextPage && (
         <div className="p-4 text-center">
           <Button

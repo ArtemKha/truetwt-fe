@@ -19,12 +19,8 @@ interface CreateCommentFormProps {
 
 export function CreateCommentForm({ postId }: CreateCommentFormProps) {
   const queryClient = useQueryClient()
-  const {
-    validationError,
-    setValidationError,
-    clearValidationError,
-    getFieldIssues,
-  } = useValidationError()
+  const { setValidationError, clearValidationError, getFieldIssues } =
+    useValidationError()
 
   const {
     register,

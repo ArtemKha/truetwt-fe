@@ -23,10 +23,11 @@ export const mockUseAuth = {
   },
   authenticated: {
     user: {
-      id: '1',
+      id: 1,
       username: 'johndoe',
-      created_at: '2024-01-01',
-      updated_at: '2024-01-01',
+      email: 'johndoe@example.com',
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
     },
     token: 'mock-token',
     isAuthenticated: true,
