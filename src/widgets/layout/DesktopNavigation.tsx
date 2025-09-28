@@ -7,7 +7,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
-} from '@/shared/ui/navigationMenu'
+} from '@/shared/ui/NavigationMenu'
 
 // Desktop Navigation Menu Component
 export function DesktopNavigation() {

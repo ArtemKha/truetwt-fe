@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { userApi } from '@/entities/user'
-import { Card, CardHeader, CardTitle } from '@/shared/ui/card'
-import { Avatar, AvatarFallback } from '@/shared/ui/avatar'
 import { Loader2 } from 'lucide-react'
+import { userApi } from '@/entities/user'
+import { Avatar, AvatarFallback } from '@/shared/ui/Avatar'
+import { Card, CardHeader, CardTitle } from '@/shared/ui/Card'
 
 interface UserProfileProps {
   userId: string

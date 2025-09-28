@@ -1,14 +1,14 @@
-import {
-  describe,
-  it,
-  expect,
-  vi,
-  beforeAll,
-  afterEach,
-  afterAll,
-} from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
-import { render } from '@/shared/lib/test/test-utils'
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest'
+import { render } from '@/shared/lib/test/testUtils'
 import { UserPosts } from '../UserPosts'
 
 // Mock the PostCard component

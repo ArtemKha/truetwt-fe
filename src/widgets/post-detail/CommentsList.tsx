@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { formatDistanceToNow } from 'date-fns'
-import { postApi } from '@/entities/post'
-import { Card, CardContent } from '@/shared/ui/card'
-import { Avatar, AvatarFallback } from '@/shared/ui/avatar'
 import { Loader2 } from 'lucide-react'
+import { postApi } from '@/entities/post'
+import { Avatar, AvatarFallback } from '@/shared/ui/Avatar'
+import { Card, CardContent } from '@/shared/ui/Card'
 
 interface CommentsListProps {
   postId: string

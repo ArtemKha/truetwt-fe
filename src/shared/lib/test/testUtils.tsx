@@ -1,7 +1,8 @@
-import React, { ReactElement } from 'react'
-import { render, RenderOptions } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { type RenderOptions, render } from '@testing-library/react'
+import type React from 'react'
+import type { ReactElement } from 'react'
+import { BrowserRouter } from 'react-router-dom'
 
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient({

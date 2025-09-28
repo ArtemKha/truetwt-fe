@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
 import { postApi } from '@/entities/post'
-import { Button } from '@/shared/ui/button'
-import { PostCard } from '@/shared/ui/post-card'
+import { Button } from '@/shared/ui/Button'
+import { PostCard } from '@/shared/ui/PostCard'
 
 export function Timeline() {
   const {

@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { postApi } from '@/entities/post'
-import { Button } from '@/shared/ui/button'
 import { Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { postApi } from '@/entities/post'
+import { Button } from '@/shared/ui/Button'
 
 interface DeletePostButtonProps {
   postId: string

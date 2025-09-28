@@ -1,8 +1,8 @@
 import { LogOut } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/features/auth'
-import { Avatar, AvatarFallback } from '@/shared/ui/avatar'
-import { Button } from '@/shared/ui/button'
+import { Avatar, AvatarFallback } from '@/shared/ui/Avatar'
+import { Button } from '@/shared/ui/Button'
 import { DesktopNavigation } from './DesktopNavigation'
 import { MobileNavigationSheet } from './MobileNavigationSheet'
 

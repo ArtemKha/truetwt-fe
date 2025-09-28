@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
-import { LoginForm } from '@/features/auth/login'
 import { AuthRedirect } from '@/app/providers/router'
+import { LoginForm } from '@/features/auth/login'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/shared/ui/card'
+} from '@/shared/ui/Card'
 
 export function LoginPage() {
   return (

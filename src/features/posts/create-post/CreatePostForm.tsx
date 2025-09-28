@@ -6,9 +6,9 @@ import { postApi } from '@/entities/post'
 import { getErrorMessage, getValidationError } from '@/shared/api/client'
 import { useValidationError } from '@/shared/lib/hooks/useValidationError'
 import { type CreatePostFormData, createPostSchema } from '@/shared/lib/schemas'
-import { Button } from '@/shared/ui/button'
-import { Card, CardContent } from '@/shared/ui/card'
-import { Textarea } from '@/shared/ui/textarea'
+import { Button } from '@/shared/ui/Button'
+import { Card, CardContent } from '@/shared/ui/Card'
+import { Textarea } from '@/shared/ui/Textarea'
 import { ValidationError } from '@/shared/ui/validationError'
 
 const MAX_CHARACTERS = 280

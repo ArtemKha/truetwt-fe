@@ -1,10 +1,10 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { userApi } from '@/entities/user'
-import { Card, CardContent } from '@/shared/ui/card'
-import { Avatar, AvatarFallback } from '@/shared/ui/avatar'
-import { Button } from '@/shared/ui/button'
-import { Loader2 } from 'lucide-react'
+import { Avatar, AvatarFallback } from '@/shared/ui/Avatar'
+import { Button } from '@/shared/ui/Button'
+import { Card, CardContent } from '@/shared/ui/Card'
 
 export function UsersList() {
   const {

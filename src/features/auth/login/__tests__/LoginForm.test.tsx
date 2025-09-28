@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest'
-import { screen, fireEvent, waitFor } from '@testing-library/react'
-import { render } from '@/shared/lib/test/test-utils'
+import { fireEvent, screen, waitFor } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import { render } from '@/shared/lib/test/testUtils'
 import { LoginForm } from '../LoginForm'
 
 // Mock the useAuth hook
@@ -20,7 +20,7 @@ vi.mock('react-router-dom', () => ({
 describe('LoginForm', () => {
   it('renders login form with username and password fields', () => {
     render(<LoginForm />)
-    
+
     expect(screen.getByLabelText(/username/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument()
@@ -28,7 +28,7 @@ describe('LoginForm', () => {
 
   it('shows validation errors for empty fields', async () => {
     render(<LoginForm />)
-    
+
     const submitButton = screen.getByRole('button', { name: /sign in/i })
     fireEvent.click(submitButton)
 
@@ -40,7 +40,7 @@ describe('LoginForm', () => {
 
   it('updates input values when typing', () => {
     render(<LoginForm />)
-    
+
     const usernameInput = screen.getByLabelText(/username/i) as HTMLInputElement
     const passwordInput = screen.getByLabelText(/password/i) as HTMLInputElement
 

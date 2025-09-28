@@ -1,12 +1,12 @@
-import { Link } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
+import { MessageCircle } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import type { Post, TimelinePost } from '@/entities/post'
 import { useAuth } from '@/features/auth'
 import { DeletePostButton } from '@/features/posts/delete-post'
-import { Card, CardContent } from './card'
-import { Avatar, AvatarFallback } from './avatar'
-import { Button } from './button'
-import { MessageCircle } from 'lucide-react'
+import { Avatar, AvatarFallback } from './Avatar'
+import { Button } from './Button'
+import { Card, CardContent } from './Card'
 
 interface PostCardProps {
   post: Post | TimelinePost

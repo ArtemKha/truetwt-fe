@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { postApi } from '@/entities/post'
-import { PostCard } from '@/shared/ui/post-card'
-import { CreateCommentForm } from '@/features/comments/create-comment'
-import { CommentsList } from './CommentsList'
 import { Loader2 } from 'lucide-react'
+import { postApi } from '@/entities/post'
+import { CreateCommentForm } from '@/features/comments/create-comment'
+import { PostCard } from '@/shared/ui/PostCard'
+import { CommentsList } from './CommentsList'
 
 interface PostDetailProps {
   postId: string

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from './button'
-import { Mail, Loader2 } from 'lucide-react'
+import { Loader2, Mail } from 'lucide-react'
+import { Button } from './Button'
 
 const meta: Meta<typeof Button> = {
   title: 'UI/Button',
@@ -9,14 +9,22 @@ const meta: Meta<typeof Button> = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'A versatile button component with multiple variants and sizes.',
+        component:
+          'A versatile button component with multiple variants and sizes.',
       },
     },
   },
   argTypes: {
     variant: {
       control: { type: 'select' },
-      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      options: [
+        'default',
+        'destructive',
+        'outline',
+        'secondary',
+        'ghost',
+        'link',
+      ],
     },
     size: {
       control: { type: 'select' },
@@ -100,8 +108,12 @@ export const Disabled: Story = {
   render: () => (
     <div className="flex gap-4">
       <Button disabled>Default Disabled</Button>
-      <Button variant="secondary" disabled>Secondary Disabled</Button>
-      <Button variant="outline" disabled>Outline Disabled</Button>
+      <Button variant="secondary" disabled>
+        Secondary Disabled
+      </Button>
+      <Button variant="outline" disabled>
+        Outline Disabled
+      </Button>
     </div>
   ),
 }

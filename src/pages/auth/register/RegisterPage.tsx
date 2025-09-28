@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
-import { RegisterForm } from '@/features/auth/register'
 import { AuthRedirect } from '@/app/providers/router'
+import { RegisterForm } from '@/features/auth/register'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/shared/ui/card'
+} from '@/shared/ui/Card'
 
 export function RegisterPage() {
   return (

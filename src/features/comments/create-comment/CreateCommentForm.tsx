@@ -9,8 +9,8 @@ import {
   type CreateCommentFormData,
   createCommentSchema,
 } from '@/shared/lib/schemas'
-import { Button } from '@/shared/ui/button'
-import { Textarea } from '@/shared/ui/textarea'
+import { Button } from '@/shared/ui/Button'
+import { Textarea } from '@/shared/ui/Textarea'
 import { ValidationError } from '@/shared/ui/validationError'
 
 interface CreateCommentFormProps {

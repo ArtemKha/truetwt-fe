@@ -3,15 +3,15 @@ import * as React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/features/auth'
 import { cn, getNavigationItems } from '@/shared/lib'
-import { Avatar, AvatarFallback } from '@/shared/ui/avatar'
-import { Button } from '@/shared/ui/button'
+import { Avatar, AvatarFallback } from '@/shared/ui/Avatar'
+import { Button } from '@/shared/ui/Button'
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/shared/ui/sheet'
+} from '@/shared/ui/Sheet'
 
 export function MobileNavigationSheet() {
   const [open, setOpen] = React.useState(false)
