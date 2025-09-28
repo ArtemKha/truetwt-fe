@@ -18,7 +18,6 @@ export function PostCard({ post }: PostCardProps) {
 
   // Handle both Post and TimelinePost formats
   const username = 'user' in post ? post.user.username : post.username
-  const mentions = post.mentions
 
   const renderContent = (
     content: string,

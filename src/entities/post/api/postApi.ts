@@ -29,7 +29,7 @@ export const postApi = {
   getUserPosts: (
     userId: string,
     params?: { page?: number; limit?: number }
-  ): Promise<TimelineResponse<TimelinePost>> =>
+  ): Promise<TimelineResponse<Post>> =>
     apiClient.get(`/posts/user/${userId}`, { params }).then((res) => res.data),
 
   getPostComments: (postId: string): Promise<PaginatedResponse<Comment>> =>

@@ -9,6 +9,26 @@ export interface PaginatedResponse<T> {
   }
 }
 
+export interface UsersResponse {
+  success: boolean
+  data: {
+    users: Array<{
+      id: number
+      username: string
+      email: string
+      createdAt: string
+      updatedAt: string
+    }>
+    pagination: {
+      total: number
+      page: number
+      limit: number
+      hasNext: boolean
+      hasPrev: boolean
+    }
+  }
+}
+
 export interface TimelineResponse<T> {
   success: boolean
   data: {

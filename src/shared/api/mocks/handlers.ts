@@ -358,14 +358,62 @@ export const handlers = [
     const limit = Number.parseInt(url.searchParams.get('limit') || '10', 10)
 
     const mockUsers = [
-      { id: 1, username: 'alice_dev' },
-      { id: 2, username: 'bob_designer' },
-      { id: 3, username: 'charlie_pm' },
-      { id: 4, username: 'diana_qa' },
-      { id: 5, username: 'eve_marketing' },
-      { id: 6, username: 'frank_cto' },
-      { id: 7, username: 'grace_hr' },
-      { id: 8, username: 'henry_sales' },
+      {
+        id: 1,
+        username: 'alice_dev',
+        email: 'alice@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 2,
+        username: 'bob_designer',
+        email: 'bob@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 3,
+        username: 'charlie_pm',
+        email: 'charlie@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 4,
+        username: 'diana_qa',
+        email: 'diana@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 5,
+        username: 'eve_marketing',
+        email: 'eve@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 6,
+        username: 'frank_cto',
+        email: 'frank@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 7,
+        username: 'grace_hr',
+        email: 'grace@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 8,
+        username: 'henry_sales',
+        email: 'henry@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
     ]
 
     // Simulate pagination

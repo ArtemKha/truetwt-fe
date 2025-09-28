@@ -16,19 +16,14 @@ export function UsersList() {
     error,
   } = useInfiniteQuery({
     queryKey: ['users'],
-    queryFn: ({ pageParam = 0 }) =>
-      userApi.getUsers({ offset: pageParam, limit: 20 }),
-    getNextPageParam: (lastPage, pages) => {
-      const totalItems = pages.reduce(
-        (acc, page) => acc + page.data.items.length,
-        0
-      )
-      if (totalItems < lastPage.data.pagination.total) {
-        return totalItems
-      }
-      return undefined
+    queryFn: ({ pageParam = 1 }) =>
+      userApi.getUsers({ page: pageParam, limit: 20 }),
+    getNextPageParam: (lastPage) => {
+      return lastPage.data.pagination.hasNext
+        ? lastPage.data.pagination.page + 1
+        : undefined
     },
-    initialPageParam: 0,
+    initialPageParam: 1,
   })
 
   if (isLoading) {
@@ -47,7 +42,7 @@ export function UsersList() {
     )
   }
 
-  const users = data?.pages.flatMap((page) => page.data.items) ?? []
+  const users = data?.pages.flatMap((page) => page.data.users) ?? []
 
   return (
     <div className="space-y-4 p-4">
