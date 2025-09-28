@@ -1,5 +1,5 @@
-import { Timeline } from '@/widgets/timeline'
 import { CreatePost } from '@/features/posts/create-post'
+import { Timeline } from '@/widgets/timeline'
 
 export function HomePage() {
   return (
