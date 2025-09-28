@@ -35,12 +35,13 @@ export function PostCard({ post }: PostCardProps) {
           splitParts.forEach((splitPart, splitIndex) => {
             if (splitIndex > 0) {
               newParts.push(
-                <span
+                <Link
                   key={`${mention.id}-${index}-${splitIndex}`}
-                  className="text-primary font-medium"
+                  to={`/profile/${mention.id}`}
+                  className="text-primary font-medium hover:underline"
                 >
                   {mentionText}
-                </span>
+                </Link>
               )
             }
             if (splitPart) {

@@ -6,7 +6,7 @@ A modern mini-blogging platform built with React, TypeScript, and Tailwind CSS f
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 22.18.0
 - npm, yarn, or pnpm
 
 ### Installation
