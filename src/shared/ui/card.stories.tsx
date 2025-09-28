@@ -1,5 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from './card'
 import { Button } from './button'
 
 const meta: Meta<typeof Card> = {
@@ -9,7 +16,8 @@ const meta: Meta<typeof Card> = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'A flexible card component with header, content, and footer sections.',
+        component:
+          'A flexible card component with header, content, and footer sections.',
       },
     },
   },
@@ -79,13 +87,22 @@ export const PostCard: Story = {
         </div>
       </CardHeader>
       <CardContent className="pt-0">
-        <p>Just shipped a new feature! Really excited about how this turned out. What do you think?</p>
+        <p>
+          Just shipped a new feature! Really excited about how this turned out.
+          What do you think?
+        </p>
       </CardContent>
       <CardFooter className="pt-3">
         <div className="flex space-x-4 text-sm text-muted-foreground">
-          <button className="hover:text-foreground">Reply</button>
-          <button className="hover:text-foreground">Like</button>
-          <button className="hover:text-foreground">Share</button>
+          <button className="hover:text-foreground" type="button">
+            Reply
+          </button>
+          <button className="hover:text-foreground" type="button">
+            Like
+          </button>
+          <button className="hover:text-foreground" type="button">
+            Share
+          </button>
         </div>
       </CardFooter>
     </Card>
@@ -105,7 +122,7 @@ export const Multiple: Story = {
           <p>Track your performance metrics and insights.</p>
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardHeader>
           <CardTitle>Settings</CardTitle>
@@ -115,7 +132,7 @@ export const Multiple: Story = {
           <p>Update your profile and preferences.</p>
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardHeader>
           <CardTitle>Support</CardTitle>
@@ -125,7 +142,7 @@ export const Multiple: Story = {
           <p>Contact our support team for assistance.</p>
         </CardContent>
       </Card>
-      
+
       <Card>
         <CardHeader>
           <CardTitle>Billing</CardTitle>
