@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/hooks/useAuth'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
@@ -11,12 +10,7 @@ import { useValidationError } from '@/shared/lib/hooks/useValidationError'
 import { getValidationError } from '@/shared/api/client'
 
 export function RegisterForm() {
-  const navigate = useNavigate()
-  const {
-    register: registerUser,
-    isRegisterLoading,
-    isAuthenticated,
-  } = useAuth()
+  const { register: registerUser, isRegisterLoading } = useAuth()
   const { setValidationError, clearValidationError, getFieldIssues } =
     useValidationError()
 
@@ -27,10 +21,6 @@ export function RegisterForm() {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
   })
-
-  if (isAuthenticated) {
-    navigate('/')
-  }
 
   const onSubmit = async (data: RegisterFormData) => {
     clearValidationError()

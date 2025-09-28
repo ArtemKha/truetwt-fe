@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 import {
   userApi,
   type LoginRequest,
@@ -9,6 +10,7 @@ import { getErrorMessage } from '@/shared/api/client'
 
 export function useAuth() {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const { data: authData, isLoading } = useQuery({
     queryKey: ['auth'],
@@ -52,6 +54,7 @@ export function useAuth() {
           user,
         })
         toast.success('Successfully logged in!')
+        navigate('/', { replace: true })
       }
     },
     onError: (error: unknown) => {
@@ -74,6 +77,7 @@ export function useAuth() {
           user,
         })
         toast.success('Account created successfully!')
+        navigate('/', { replace: true })
       }
     },
     onError: (error: unknown) => {
@@ -91,6 +95,7 @@ export function useAuth() {
       queryClient.setQueryData(['auth'], null)
       queryClient.clear()
       toast.success('Successfully logged out!')
+      navigate('/login', { replace: true })
     },
   })
 
