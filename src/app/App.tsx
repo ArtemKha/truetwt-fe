@@ -3,6 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { BrowserRouter } from 'react-router-dom'
 import { AppRouter } from './providers/router'
 import { Toaster } from '@/shared/ui/sonner'
+import { ScrollToTop } from '@/shared/lib'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,6 +18,7 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ScrollToTop />
         <AppRouter />
         <Toaster />
         <ReactQueryDevtools initialIsOpen={false} />
