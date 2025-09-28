@@ -27,13 +27,17 @@ export function CreateCommentForm({ postId }: CreateCommentFormProps) {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<CreateCommentFormData>({
     resolver: zodResolver(createCommentSchema),
     defaultValues: {
       content: '',
-      postId,
     },
   })
+
+  const content = watch('content')
+  const characterCount = content?.length || 0
+  const maxLength = 500
 
   const createCommentMutation = useMutation({
     mutationFn: (data: { content: string }) =>
@@ -62,11 +66,21 @@ export function CreateCommentForm({ postId }: CreateCommentFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
       <div className="space-y-2">
-        <Textarea
-          {...register('content')}
-          placeholder="Write a comment..."
-          className="min-h-[80px] resize-none"
-        />
+        <div className="relative">
+          <Textarea
+            {...register('content')}
+            placeholder="Write a comment..."
+            className="min-h-[80px] resize-none pr-16"
+            maxLength={maxLength}
+          />
+          <div className="absolute bottom-2 right-2 text-xs text-muted-foreground">
+            <span
+              className={characterCount > maxLength ? 'text-destructive' : ''}
+            >
+              {characterCount}/{maxLength}
+            </span>
+          </div>
+        </div>
         {errors.content && (
           <p className="text-sm text-destructive">{errors.content.message}</p>
         )}
@@ -76,7 +90,11 @@ export function CreateCommentForm({ postId }: CreateCommentFormProps) {
       <div className="flex justify-end">
         <Button
           type="submit"
-          disabled={createCommentMutation.isPending}
+          disabled={
+            createCommentMutation.isPending ||
+            characterCount === 0 ||
+            characterCount > maxLength
+          }
           size="sm"
         >
           {createCommentMutation.isPending ? 'Commenting...' : 'Comment'}

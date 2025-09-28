@@ -129,7 +129,6 @@ export const createPostSchema = z.object({
  */
 export const createCommentSchema = z.object({
   content: commentContentSchema,
-  postId: z.string().uuid({ message: 'Invalid post ID' }),
 })
 
 /**

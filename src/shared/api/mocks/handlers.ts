@@ -625,6 +625,68 @@ export const handlers = [
       const { postId } = params
       const body = (await request.json()) as { content: string }
 
+      // Validation errors
+      if (!body.content) {
+        return HttpResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'VALIDATION_ERROR',
+              message: 'Request validation failed',
+              details: {
+                issues: [
+                  {
+                    path: 'content',
+                    message: 'Required',
+                    code: 'invalid_type',
+                  },
+                ],
+              },
+            },
+          },
+          { status: 400 }
+        )
+      }
+
+      if (body.content.length > 500) {
+        return HttpResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'VALIDATION_ERROR',
+              message: 'Request validation failed',
+              details: {
+                issues: [
+                  {
+                    path: 'content',
+                    message: 'Must be no more than 500 characters',
+                    code: 'too_big',
+                  },
+                ],
+              },
+            },
+          },
+          { status: 400 }
+        )
+      }
+
+      // Check if post exists
+      const post = mockTimelinePosts.find(
+        (p: TimelinePost) => p.id === Number(postId)
+      )
+      if (!post) {
+        return HttpResponse.json(
+          {
+            success: false,
+            error: {
+              code: 'NOT_FOUND',
+              message: 'Post not found',
+            },
+          },
+          { status: 404 }
+        )
+      }
+
       const newComment = {
         id: mockComments.length + 1,
         postId: Number(postId),
@@ -642,10 +704,13 @@ export const handlers = [
       // Add to mock data
       mockComments.push(newComment)
 
-      return HttpResponse.json({
-        success: true,
-        data: newComment,
-      })
+      return HttpResponse.json(
+        {
+          success: true,
+          data: newComment,
+        },
+        { status: 201 }
+      )
     }
   ),
 ]
