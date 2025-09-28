@@ -531,6 +531,93 @@ export const handlers = [
     })
   }),
 
+  // GET /api/users/:id - Get user by ID
+  http.get(`${API_BASE_URL}/users/:id`, ({ params }) => {
+    const { id } = params
+    const userId = Number(id)
+
+    const mockUsers = [
+      {
+        id: 1,
+        username: 'alice_dev',
+        email: 'alice@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 2,
+        username: 'bob_designer',
+        email: 'bob@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 3,
+        username: 'charlie_pm',
+        email: 'charlie@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 4,
+        username: 'diana_qa',
+        email: 'diana@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 5,
+        username: 'eve_marketing',
+        email: 'eve@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 6,
+        username: 'frank_cto',
+        email: 'frank@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 7,
+        username: 'grace_hr',
+        email: 'grace@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+      {
+        id: 8,
+        username: 'henry_sales',
+        email: 'henry@example.com',
+        createdAt: '2025-09-27T11:01:10.000Z',
+        updatedAt: '2025-09-27T11:01:10.000Z',
+      },
+    ]
+
+    const user = mockUsers.find((u) => u.id === userId)
+
+    if (!user) {
+      return HttpResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'NOT_FOUND',
+            message: 'User not found',
+          },
+        },
+        { status: 404 }
+      )
+    }
+
+    return HttpResponse.json({
+      success: true,
+      data: {
+        user,
+      },
+    })
+  }),
+
   // POST /api/posts/:postId/comments - Create a new comment
   http.post(
     `${API_BASE_URL}/posts/:postId/comments`,

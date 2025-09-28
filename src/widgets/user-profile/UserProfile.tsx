@@ -28,7 +28,7 @@ export function UserProfile({ userId }: UserProfileProps) {
     )
   }
 
-  const user = data.data
+  const user = data.data.user
 
   return (
     <Card className="border-x-0 border-t-0 rounded-none">

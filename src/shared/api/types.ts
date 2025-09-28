@@ -98,6 +98,19 @@ export interface ApiError {
   }
 }
 
+export interface UserResponse {
+  success: boolean
+  data: {
+    user: {
+      id: number
+      username: string
+      email: string
+      createdAt: string
+      updatedAt: string
+    }
+  }
+}
+
 export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T

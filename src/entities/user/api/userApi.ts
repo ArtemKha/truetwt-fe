@@ -1,5 +1,9 @@
 import { apiClient } from '@/shared/api/client'
-import type { ApiResponse, UsersResponse } from '@/shared/api/types'
+import type {
+  ApiResponse,
+  UsersResponse,
+  UserResponse,
+} from '@/shared/api/types'
 import type {
   User,
   CreateUserRequest,
@@ -27,7 +31,7 @@ export const userApi = {
   }): Promise<UsersResponse> =>
     apiClient.get('/users', { params }).then((res) => res.data),
 
-  getUserById: (id: string): Promise<ApiResponse<User>> =>
+  getUserById: (id: string): Promise<UserResponse> =>
     apiClient.get(`/users/${id}`).then((res) => res.data),
 
   updateUser: (id: string, data: Partial<User>): Promise<ApiResponse<User>> =>
