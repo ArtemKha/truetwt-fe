@@ -1,17 +1,17 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
 import { postApi } from '@/entities/post'
+import { getErrorMessage, getValidationError } from '@/shared/api/client'
+import { useValidationError } from '@/shared/lib/hooks/useValidationError'
+import {
+  type CreateCommentFormData,
+  createCommentSchema,
+} from '@/shared/lib/schemas'
 import { Button } from '@/shared/ui/button'
 import { Textarea } from '@/shared/ui/textarea'
-import { ValidationError } from '@/shared/ui/validation-error'
-import {
-  createCommentSchema,
-  type CreateCommentFormData,
-} from '@/shared/lib/schemas'
-import { useValidationError } from '@/shared/lib/hooks/useValidationError'
-import { getValidationError, getErrorMessage } from '@/shared/api/client'
-import { toast } from 'sonner'
+import { ValidationError } from '@/shared/ui/validationError'
 
 interface CreateCommentFormProps {
   postId: string

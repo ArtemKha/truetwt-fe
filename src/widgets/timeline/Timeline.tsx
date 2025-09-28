@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { postApi } from '@/entities/post'
-import { PostCard } from '@/shared/ui/post-card'
-import { Button } from '@/shared/ui/button'
 import { Loader2 } from 'lucide-react'
+import { postApi } from '@/entities/post'
+import { Button } from '@/shared/ui/button'
+import { PostCard } from '@/shared/ui/post-card'
 
 export function Timeline() {
   const {
@@ -31,8 +31,6 @@ export function Timeline() {
       </div>
     )
   }
-
-  console.log('error', error)
 
   if (error) {
     return (

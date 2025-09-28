@@ -1,13 +1,13 @@
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useAuth } from '../lib/hooks/useAuth'
+import { useForm } from 'react-hook-form'
+import { getValidationError } from '@/shared/api/client'
+import { useValidationError } from '@/shared/lib/hooks/useValidationError'
+import { type LoginFormData, loginSchema } from '@/shared/lib/schemas'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
-import { ValidationError } from '@/shared/ui/validation-error'
-import { loginSchema, type LoginFormData } from '@/shared/lib/schemas'
-import { useValidationError } from '@/shared/lib/hooks/useValidationError'
-import { getValidationError } from '@/shared/api/client'
+import { ValidationError } from '@/shared/ui/validationError'
+import { useAuth } from '../lib/hooks/useAuth'
 
 export function LoginForm() {
   const { login, isLoginLoading } = useAuth()
