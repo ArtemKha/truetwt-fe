@@ -31,7 +31,7 @@ export function CommentsList({ postId }: CommentsListProps) {
     )
   }
 
-  const comments = data?.data.items ?? []
+  const comments = data?.data.comments ?? []
 
   if (comments.length === 0) {
     return (
@@ -53,14 +53,14 @@ export function CommentsList({ postId }: CommentsListProps) {
             <div className="flex space-x-3">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="text-xs">
-                  {comment.username.slice(0, 2).toUpperCase()}
+                  {comment.user.username.slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-2">
                   <span className="font-medium text-sm">
-                    @{comment.username}
+                    @{comment.user.username}
                   </span>
                   <span className="text-muted-foreground text-xs">
                     {formatDistanceToNow(new Date(comment.createdAt), {

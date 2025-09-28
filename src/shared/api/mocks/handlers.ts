@@ -119,6 +119,63 @@ const mockTimelinePosts: TimelinePost[] = [
   },
 ]
 
+// Mock comments data
+const mockComments = [
+  {
+    id: 1,
+    postId: 1,
+    userId: 2,
+    content: 'Welcome to the team! Looking forward to working together.',
+    createdAt: '2025-09-27T11:01:10.000Z',
+    updatedAt: '2025-09-27T11:01:10.000Z',
+    isDeleted: false,
+    user: {
+      id: 2,
+      username: 'bob_designer',
+    },
+  },
+  {
+    id: 21,
+    postId: 1,
+    userId: 3,
+    content:
+      'Thanks for the warm welcome! Excited to contribute to this project.',
+    createdAt: '2025-09-27T11:01:10.000Z',
+    updatedAt: '2025-09-27T11:01:10.000Z',
+    isDeleted: false,
+    user: {
+      id: 3,
+      username: 'charlie_pm',
+    },
+  },
+  {
+    id: 2,
+    postId: 2,
+    userId: 1,
+    content: 'Great progress on the new feature! The UI looks amazing.',
+    createdAt: '2025-09-27T11:15:30.000Z',
+    updatedAt: '2025-09-27T11:15:30.000Z',
+    isDeleted: false,
+    user: {
+      id: 1,
+      username: 'alice_dev',
+    },
+  },
+  {
+    id: 3,
+    postId: 2,
+    userId: 4,
+    content: "I've tested this thoroughly and it works perfectly!",
+    createdAt: '2025-09-27T11:30:45.000Z',
+    updatedAt: '2025-09-27T11:30:45.000Z',
+    isDeleted: false,
+    user: {
+      id: 4,
+      username: 'diana_qa',
+    },
+  },
+]
+
 const API_BASE_URL = 'http://localhost:3000/api'
 
 export const handlers = [
@@ -438,4 +495,70 @@ export const handlers = [
       },
     })
   }),
+
+  // GET /api/posts/:postId/comments - Get comments for a post
+  http.get(`${API_BASE_URL}/posts/:postId/comments`, ({ request, params }) => {
+    const { postId } = params
+    const url = new URL(request.url)
+    const page = Number.parseInt(url.searchParams.get('page') || '1', 10)
+    const limit = Number.parseInt(url.searchParams.get('limit') || '20', 10)
+
+    // Filter comments by postId
+    const postComments = mockComments.filter(
+      (comment) => comment.postId === Number(postId) && !comment.isDeleted
+    )
+
+    // Simulate pagination
+    const startIndex = (page - 1) * limit
+    const endIndex = startIndex + limit
+    const paginatedComments = postComments.slice(startIndex, endIndex)
+    const total = postComments.length
+    const hasNext = endIndex < total
+    const hasPrev = page > 1
+
+    return HttpResponse.json({
+      success: true,
+      data: {
+        comments: paginatedComments,
+        pagination: {
+          total,
+          page,
+          limit,
+          hasNext,
+          hasPrev,
+        },
+      },
+    })
+  }),
+
+  // POST /api/posts/:postId/comments - Create a new comment
+  http.post(
+    `${API_BASE_URL}/posts/:postId/comments`,
+    async ({ request, params }) => {
+      const { postId } = params
+      const body = (await request.json()) as { content: string }
+
+      const newComment = {
+        id: mockComments.length + 1,
+        postId: Number(postId),
+        userId: 1, // Current user
+        content: body.content,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        isDeleted: false,
+        user: {
+          id: 1,
+          username: 'alice_dev',
+        },
+      }
+
+      // Add to mock data
+      mockComments.push(newComment)
+
+      return HttpResponse.json({
+        success: true,
+        data: newComment,
+      })
+    }
+  ),
 ]

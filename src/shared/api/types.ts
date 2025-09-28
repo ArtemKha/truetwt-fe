@@ -43,6 +43,32 @@ export interface TimelineResponse<T> {
   }
 }
 
+export interface CommentsResponse {
+  success: boolean
+  data: {
+    comments: Array<{
+      id: number
+      postId: number
+      userId: number
+      content: string
+      createdAt: string
+      updatedAt: string
+      isDeleted: boolean
+      user: {
+        id: number
+        username: string
+      }
+    }>
+    pagination: {
+      total: number
+      page: number
+      limit: number
+      hasNext: boolean
+      hasPrev: boolean
+    }
+  }
+}
+
 export interface ValidationIssue {
   path: string
   message: string

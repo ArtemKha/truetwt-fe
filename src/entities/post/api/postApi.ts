@@ -1,8 +1,8 @@
 import { apiClient } from '@/shared/api/client'
 import type {
   ApiResponse,
-  PaginatedResponse,
   TimelineResponse,
+  CommentsResponse,
 } from '@/shared/api/types'
 import type {
   Post,
@@ -32,8 +32,13 @@ export const postApi = {
   ): Promise<TimelineResponse<Post>> =>
     apiClient.get(`/posts/user/${userId}`, { params }).then((res) => res.data),
 
-  getPostComments: (postId: string): Promise<PaginatedResponse<Comment>> =>
-    apiClient.get(`/posts/${postId}/comments`).then((res) => res.data),
+  getPostComments: (
+    postId: string,
+    params?: { page?: number; limit?: number }
+  ): Promise<CommentsResponse> =>
+    apiClient
+      .get(`/posts/${postId}/comments`, { params })
+      .then((res) => res.data),
 
   createComment: (
     postId: string,
