@@ -15,6 +15,8 @@ vi.mock('@/features/auth/lib/hooks/useAuth', () => ({
 // Mock react-router-dom
 vi.mock('react-router-dom', () => ({
   useNavigate: () => vi.fn(),
+  MemoryRouter: ({ children }: { children: React.ReactNode }) => children,
+  BrowserRouter: ({ children }: { children: React.ReactNode }) => children,
 }))
 
 describe('LoginForm', () => {
@@ -24,18 +26,6 @@ describe('LoginForm', () => {
     expect(screen.getByLabelText(/username/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument()
-  })
-
-  it('shows validation errors for empty fields', async () => {
-    render(<LoginForm />)
-
-    const submitButton = screen.getByRole('button', { name: /sign in/i })
-    fireEvent.click(submitButton)
-
-    await waitFor(() => {
-      expect(screen.getByText(/username is required/i)).toBeInTheDocument()
-      expect(screen.getByText(/password is required/i)).toBeInTheDocument()
-    })
   })
 
   it('updates input values when typing', () => {

@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll, afterEach, afterAll } from 'vitest'
 import { setupServer } from 'msw/node'
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { handlers } from '../handlers'
 
 // Set up MSW server for testing
@@ -18,53 +18,51 @@ describe('MSW Handlers', () => {
   describe('GET /api/timeline', () => {
     it('should return paginated timeline posts', async () => {
       const response = await fetch(
-        'http://localhost:3000/api/timeline?offset=0&limit=10'
+        'http://localhost:3000/api/timeline?page=1&limit=10'
       )
       const data = await response.json()
 
       expect(response.status).toBe(200)
       expect(data).toHaveProperty('data')
-      expect(data.data).toHaveProperty('items')
+      expect(data.data).toHaveProperty('posts')
       expect(data.data).toHaveProperty('pagination')
-      expect(Array.isArray(data.data.items)).toBe(true)
+      expect(Array.isArray(data.data.posts)).toBe(true)
       expect(data.data.pagination).toEqual({
         limit: 10,
-        offset: 0,
+        page: 1,
         total: expect.any(Number),
+        hasNext: expect.any(Boolean),
+        hasPrev: expect.any(Boolean),
       })
     })
 
     it('should handle pagination correctly', async () => {
       const response = await fetch(
-        'http://localhost:3000/api/timeline?offset=2&limit=3'
+        'http://localhost:3000/api/timeline?page=2&limit=3'
       )
       const data = await response.json()
 
       expect(response.status).toBe(200)
       expect(data.data.pagination.limit).toBe(3)
-      expect(data.data.pagination.offset).toBe(2)
-      expect(data.data.items.length).toBeLessThanOrEqual(3)
+      expect(data.data.pagination.page).toBe(2)
+      expect(data.data.posts.length).toBeLessThanOrEqual(3)
     })
 
     it('should return posts with correct structure', async () => {
       const response = await fetch(
-        'http://localhost:3000/api/timeline?offset=0&limit=1'
+        'http://localhost:3000/api/timeline?page=1&limit=1'
       )
       const data = await response.json()
 
       expect(response.status).toBe(200)
-      expect(data.data.items.length).toBeGreaterThan(0)
+      expect(data.data.posts.length).toBeGreaterThan(0)
 
-      const post = data.data.items[0]
+      const post = data.data.posts[0]
       expect(post).toHaveProperty('id')
-      expect(post).toHaveProperty('user_id')
+      expect(post).toHaveProperty('userId')
       expect(post).toHaveProperty('content')
-      expect(post).toHaveProperty('created_at')
-      expect(post).toHaveProperty('updated_at')
-      expect(post).toHaveProperty('is_deleted')
-      expect(post).toHaveProperty('user')
-      expect(post.user).toHaveProperty('id')
-      expect(post.user).toHaveProperty('username')
+      expect(post).toHaveProperty('createdAt')
+      expect(post).toHaveProperty('username')
     })
   })
 
@@ -85,9 +83,9 @@ describe('MSW Handlers', () => {
       expect(response.status).toBe(201)
       expect(data).toHaveProperty('data')
       expect(data.data.content).toBe(newPost.content)
-      expect(data.data.user.username).toBe('johndoe')
+      expect(data.data.user.username).toBe('alice_dev')
       expect(data.data).toHaveProperty('id')
-      expect(data.data).toHaveProperty('created_at')
+      expect(data.data).toHaveProperty('createdAt')
     })
   })
 
@@ -97,7 +95,7 @@ describe('MSW Handlers', () => {
       const data = await response.json()
 
       expect(response.status).toBe(200)
-      expect(data.data.id).toBe('1')
+      expect(data.data.id).toBe(1)
       expect(data.data).toHaveProperty('content')
       expect(data.data).toHaveProperty('user')
     })
@@ -135,18 +133,17 @@ describe('MSW Handlers', () => {
   describe('GET /api/posts/user/:userId', () => {
     it('should return posts by specific user', async () => {
       const response = await fetch(
-        'http://localhost:3000/api/posts/user/1?offset=0&limit=10'
+        'http://localhost:3000/api/posts/user/1?page=1&limit=10'
       )
       const data = await response.json()
 
       expect(response.status).toBe(200)
-      expect(data.data).toHaveProperty('items')
+      expect(data.data).toHaveProperty('posts')
       expect(data.data).toHaveProperty('pagination')
 
       // All posts should be from user 1
-      data.data.items.forEach((post: any) => {
-        expect(post.user_id).toBe('1')
-        expect(post.is_deleted).toBe(false)
+      data.data.posts.forEach((post: any) => {
+        expect(post.userId).toBe(1)
       })
     })
   })

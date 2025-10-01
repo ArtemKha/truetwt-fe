@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
-import { UserProfile } from '@/widgets/user-profile'
 import { UserPosts } from '@/widgets/user-posts'
+import { UserProfile } from '@/widgets/user-profile'
 
 export function ProfilePage() {
   const { userId } = useParams<{ userId: string }>()

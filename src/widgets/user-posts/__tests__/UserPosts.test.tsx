@@ -1,35 +1,16 @@
 import { screen, waitFor } from '@testing-library/react'
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { render } from '@/shared/lib/test/testUtils'
 import { UserPosts } from '../UserPosts'
 
 // Mock the PostCard component
-vi.mock('@/shared/ui/post-card', () => ({
+vi.mock('@/shared/ui/PostCard', () => ({
   PostCard: ({ post }: { post: { id: number; content: string } }) => (
     <div data-testid={`post-${post.id}`}>{post.content}</div>
   ),
 }))
 
-// Mock MSW server - in a real test environment, this would be set up in test setup
-const mockServer = {
-  listen: vi.fn(),
-  resetHandlers: vi.fn(),
-  close: vi.fn(),
-}
-
 describe('UserPosts', () => {
-  beforeAll(() => mockServer.listen())
-  afterEach(() => mockServer.resetHandlers())
-  afterAll(() => mockServer.close())
-
   it('renders loading state initially', () => {
     render(<UserPosts userId="1" />)
     expect(screen.getByTestId('loading-spinner')).toBeInTheDocument()
@@ -64,9 +45,5 @@ describe('UserPosts', () => {
     await waitFor(() => {
       expect(screen.getByText('Posts')).toBeInTheDocument()
     })
-
-    // The component should handle the response format:
-    // { success: true, data: { posts: [...], pagination: {...} } }
-    // This is verified by the component rendering without errors
   })
 })

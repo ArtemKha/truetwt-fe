@@ -1,8 +1,16 @@
-import { http, HttpResponse } from 'msw'
+import { HttpResponse, http } from 'msw'
 import type { Post, TimelinePost } from '@/entities/post/model/types'
 
 // Mock data for timeline posts
 const mockTimelinePosts: TimelinePost[] = [
+  {
+    id: 1,
+    userId: 1,
+    username: 'alice_dev',
+    content: 'Hello world! This is my first post.',
+    createdAt: '2025-09-27T10:48:02.000Z',
+    mentions: [],
+  },
   {
     id: 9,
     userId: 1,
@@ -190,8 +198,6 @@ export const handlers = [
     const endIndex = startIndex + limit
     const paginatedPosts = mockTimelinePosts.slice(startIndex, endIndex)
     const total = mockTimelinePosts.length
-    const hasNext = endIndex < total
-    const hasPrev = page > 1
 
     return HttpResponse.json({
       success: true,
@@ -201,8 +207,8 @@ export const handlers = [
           total,
           page,
           limit,
-          hasNext,
-          hasPrev,
+          hasNext: endIndex < total,
+          hasPrev: page > 1,
         },
       },
     })
@@ -240,7 +246,7 @@ export const handlers = [
     return HttpResponse.json(
       {
         success: true,
-        data: { post: newPost },
+        data: newPost,
       },
       { status: 201 }
     )
@@ -258,7 +264,7 @@ export const handlers = [
         {
           success: false,
           error: {
-            code: 'NOT_FOUND',
+            code: 'not_found',
             message: 'Post not found',
           },
         },
@@ -286,7 +292,7 @@ export const handlers = [
 
     return HttpResponse.json({
       success: true,
-      data: { post },
+      data: post,
     })
   }),
 
@@ -302,7 +308,7 @@ export const handlers = [
         {
           success: false,
           error: {
-            code: 'NOT_FOUND',
+            code: 'not_found',
             message: 'Post not found',
           },
         },
@@ -312,9 +318,7 @@ export const handlers = [
 
     mockTimelinePosts.splice(postIndex, 1)
 
-    return HttpResponse.json({
-      success: true,
-    })
+    return new Response(null, { status: 204 })
   }),
 
   // GET /api/posts/user/:userId - Get posts by user
@@ -333,8 +337,6 @@ export const handlers = [
     const endIndex = startIndex + limit
     const paginatedPosts = userPosts.slice(startIndex, endIndex)
     const total = userPosts.length
-    const hasNext = endIndex < total
-    const hasPrev = page > 1
 
     return HttpResponse.json({
       success: true,
@@ -344,8 +346,8 @@ export const handlers = [
           total,
           page,
           limit,
-          hasNext,
-          hasPrev,
+          hasNext: endIndex < total,
+          hasPrev: page > 1,
         },
       },
     })
@@ -602,7 +604,7 @@ export const handlers = [
         {
           success: false,
           error: {
-            code: 'NOT_FOUND',
+            code: 'not_found',
             message: 'User not found',
           },
         },
@@ -679,7 +681,7 @@ export const handlers = [
           {
             success: false,
             error: {
-              code: 'NOT_FOUND',
+              code: 'not_found',
               message: 'Post not found',
             },
           },
