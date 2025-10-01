@@ -90,7 +90,7 @@ export function PostCard({ post }: PostCardProps) {
 
             <div className="mt-2">
               <Link to={`/post/${post.id}`}>
-                <p className="text-foreground whitespace-pre-wrap hover:cursor-pointer">
+                <p className="text-foreground whitespace-pre-wrap hover:cursor-pointer break-words overflow-hidden">
                   {renderContent(post.content, post.mentions)}
                 </p>
               </Link>
